@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block title %}
+Course Details
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block css %}
+
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block content%}
+<div class="container">
+    {% if course_error_msg %}
+    <h1>{{course_error_msg}}</h1>
+    {% else %}
+    <h1>Course Title: {{course.course_title}}</h1>
+    <h3>Course ID: {{course.course_id}}</h3>
+    <br/>
+    <br/>
+
+    <div class="">
+        <table class="table table-striped table-hover">
+            <tr>
+                <th style="width:25%;">Category:</th>
+                <td>{{course.category_title}}</td>
+            </tr>
+            <tr>
+                <th>Subcategory:</th>
+                <td>{{course.subcategory_title}}</td>
+            </tr>
+            <tr>
+                <th>Subcategory Description:</th>
+                <td>{{course.subcategory_description}}</td>
+            </tr>
+            <tr>
+                <th>Subcategory Url:</th>
+                <td><a href="https://{{course.subcategory_url}}">{{course.subcategory_url}}</a></td>
+            </tr>
+            <tr>
+                <th>Course Url:</th>
+                <td><a href="https://{{course.course_url}}">{{course.course_url}}</a></td>
+            </tr>
+            <tr>
+                <th>Number of Subscribers:</th>
+                <td>{{course.num_of_subscribers}}</td>
+            </tr>
+            <tr>
+                <th>Average Rating:</th>
+                <td>{{'%0.2f' % course.avg_rating|float}}</td>
+            </tr>
+            <tr>
+                <th>Number of Reviews:</th>
+                <td>{{course.num_of_reviews}}</td>
+            </tr>
+            <tr>
+                <th>Overall Comment:</th>
+                <td class="bg-warning">{{overall_comment}}</td>
+            </tr>
+        </table>
+
+
+    </div>
+    {% endif %}
+</div>
+{% endblock%}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block js %}
+
+{% endblock %}

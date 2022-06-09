@@ -1,0 +1,131 @@
+{% extends "layout.html" %}
+{% block title %}
+Instructor List
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block css %}
+
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block content%}
+<div class="container">
+    <h1>Instructor Analysis</h1>
+
+    <h3>Number of Instructors: {{total_num}}</h3>
+    <br/>
+    <br/>
+    <div>
+        <button class="btn btn-primary w-25" id="process-btn">Process Instructor Data</button>&nbsp;&nbsp;&nbsp;
+        <a class="btn btn-primary w-25" id="generate-analysis-btn" href="/instructor/instructor-analysis" target="_blank">Instructor Analysis Figure</a>
+
+    </div>
+    <br/>
+    <br/>
+    <div style="word-wrap: break-word;">
+        <table class="table table-striped table-hover table-bordered">
+            <thead>
+            <tr style="background-color: #bcbebf;">
+                <th>#</th>
+                <th>Instructor ID</th>
+                <th style="width:10%">Username</th>
+<!--                <th>Password</th>-->
+                <th style="width:10%">Email</th>
+                <th>Display Name</th>
+                <th>Job Title</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for instructor in one_page_instructor_list %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{instructor.uid}}</td>
+                <td style="width:10%; word-wrap: break-word;word-break:break-all;">{{instructor.username}}</td>
+<!--                <td>{{instructor.password}}</td>-->
+                <td style="width:10%; word-wrap: break-word;word-break:break-all;">{{instructor.email}}</td>
+                <td>{{instructor.display_name}}</td>
+
+                <td>{{instructor.job_title}}</td>
+
+                <td><a href="/instructor/teach-courses?id={{instructor.uid}}" target="_blank" class="btn btn-warning">Teach Courses</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    <div>
+        {% if total_pages != 0 %}
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="/instructor/instructor-list?page=1">Start</a></li>
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+
+                {% for num in page_num_list %}
+                {% if num == current_page %}
+                <li class="page-item active"><a class="page-link" href="/instructor/instructor-list?page={{num}}">{{num}}</a></li>
+                {% else %}
+                <li class="page-item "><a class="page-link" href="/instructor/instructor-list?page={{num}}">{{num}}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                <li class="page-item"><a class="page-link" href="/instructor/instructor-list?page={{total_pages}}">End</a></li>
+
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+{% endblock%}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block js %}
+<script>
+    var process_instructor_ops = {
+        init: function () {
+            this.eventBind();
+        },
+        eventBind: function () {
+            $("#process-btn").click(function () {
+                var btn_target = $(this);
+                if (btn_target.hasClass("disabled")) {
+                    alert("processing, please do not click multiple times");
+                    return;
+                }
+
+                btn_target.addClass("disabled");
+                $.ajax({
+                    url: "/instructor/process-instructor",
+                    type: "POST",
+                    data: {
+                        process: "process-start"
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        console.log(res)
+                        btn_target.removeClass("disabled");
+
+                        if (res.code == 200) {
+                            alert("process finish");
+                            window.location.href = "/instructor/instructor-list";
+                        } else {
+                            alert(res.msg);
+                        }
+                    }
+                });
+            });
+        }
+    };
+
+    $(document).ready(function () {
+        process_instructor_ops.init();
+
+    });
+</script>
+{% endblock %}

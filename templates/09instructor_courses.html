@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block title %}
+Instructor Teach Courses
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block css %}
+
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block content%}
+<div class="container">
+    <h1>Instructor Teach Course List</h1>
+    <h3>Number of Courses: {{total_num}}</h3>
+    <br/>
+    <br/>
+    <div>
+        <table class="table table-striped table-hover table-bordered">
+            <thead>
+            <tr style="background-color: #bcbebf;">
+                <th>#</th>
+                <th>Course ID</th>
+                <th>Course Title</th>
+                <th>Avg Rating</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for course in course_list %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{course.course_id}}</td>
+                <td><a href="https://{{course.course_url}}">{{course.course_title}}</a></td>
+                <td>{{'%0.2f' % course.avg_rating|float}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <br/>
+        <br/>
+        <br/>
+
+    </div>
+</div>
+{% endblock%}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block js %}
+
+{% endblock %}

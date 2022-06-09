@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+{% block title %}
+Course List
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block css %}
+
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block content%}
+<div class="container">
+    <h1>Course Analysis</h1>
+    {% if current_user_role %}
+    <h3>Number of Courses: {{total_num}}</h3>
+    <br/>
+    <br/>
+    <div>
+        <button class="btn btn-primary w-25" id="process-btn">Process Course Data</button>&nbsp;&nbsp;&nbsp;
+        <a class="btn btn-primary w-25" id="generate-analysis-btn" href="/course/course-analysis" target="_blank">Course Analysis Figure</a>
+
+    </div>
+    <br/>
+    <br/>
+    <div>
+        <table class="table table-striped table-hover table-bordered">
+            <thead>
+            <tr style="background-color: #bcbebf;">
+                <th style="width: 5%;">#</th>
+                <th style="width: 13%;">Category Title</th>
+                <th style="width: 13%;">Subcategory Title</th>
+                <th style="width: 25%;">Course Title</th>
+                <th style="width: 12%;">Average Rating</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for course in one_page_course_list %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{course.category_title}}</td>
+                <td><a href="https://{{course.subcategory_url}}">{{course.subcategory_title}}</a></td>
+                <td><a href="https://{{course.course_url}}">{{course.course_title}}</a></td>
+                <td>{{'%0.2f' % course.avg_rating|float}}</td>
+                <td><a class="btn btn-info" href="/course/course-details?id={{course.course_id}}">Details</a>&nbsp;&nbsp;
+<!--                    <a class="btn btn-warning" href="#">Update</a>&nbsp;&nbsp;-->
+                    <a class="btn btn-danger" href="/course/course-delete?id={{course.course_id}}">Delete</a></td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    <div>
+        {% if total_pages != 0 %}
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="/course/course-list?page=1">Start</a></li>
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+
+                {% for num in page_num_list %}
+                    {% if num == current_page %}
+                        <li class="page-item active"><a class="page-link" href="/course/course-list?page={{num}}">{{num}}</a></li>
+                    {% else %}
+                        <li class="page-item "><a class="page-link" href="/course/course-list?page={{num}}">{{num}}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                <li class="page-item"><a class="page-link" href="/course/course-list?page={{total_pages}}">End</a></li>
+
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+    {% else %}
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <h4>You have no permission to view user list</h4>
+    {% endif %}
+</div>
+
+{% endblock%}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block js %}
+<script>
+    var process_ops = {
+        init: function () {
+            this.eventBind();
+        },
+        eventBind: function () {
+            $("#process-btn").click(function () {
+                var btn_target = $(this);
+                if (btn_target.hasClass("disabled")) {
+                    alert("processing, please do not click multiple times");
+                    return;
+                }
+
+                btn_target.addClass("disabled");
+                $.ajax({
+                    url: "/course/process-course",
+                    type: "POST",
+                    data: {
+                        process: "process-start"
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        console.log(res)
+                        btn_target.removeClass("disabled");
+
+                        if (res.code == 200) {
+                            alert("process finish");
+                            window.location.href = "/course/course-list";
+                        } else {
+                            alert(res.msg);
+                        }
+                    }
+                });
+            });
+        }
+    };
+
+    $(document).ready(function () {
+        process_ops.init();
+
+    });
+</script>
+{% endblock %}

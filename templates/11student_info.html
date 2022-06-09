@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %}
+Student Info
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block css %}
+
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block content%}
+<div class="container">
+    <!-- student code start -->
+    <h2>Student Info</h2>
+    <div class="row">
+        <div class="col">
+            id: {{user.uid}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            username: {{user.username}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            password: {{user.password}}
+        </div>
+    </div>
+    {% if user.email %}
+    <div class="row">
+        <div class="col">
+            email: {{user.email}}
+        </div>
+    </div>
+    {% endif %}
+    <!-- student code end -->
+</div>
+{% endblock%}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block js %}
+
+{% endblock %}

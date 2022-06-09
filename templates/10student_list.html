@@ -1,0 +1,70 @@
+{% extends "layout.html" %}
+{% block title %}
+User List
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block css %}
+
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block content%}
+<div class="container">
+    <h1>User list</h1>
+    {%if current_user_role == 'admin' %}
+    <h3>Number of students: {{total_num}}</h3>
+    <br/>
+    <br/>
+    <br/>
+
+    <div>
+        <table class="table table-striped table-hover table-bordered">
+            <!-- student code start -->
+            <td><a href="/user/student-info?id={{user.uid}}">Details</a></td>
+            <br/>
+            <td><a href="/user/student-delete?id={{user.uid}}">Delete</a></td>
+            <!-- student code end -->
+        </table>
+
+    </div>
+    <div>
+        {% if total_pages != 0 %}
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" href="/user/student-list?page=1">Start</a></li>
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+
+                {% for num in page_num_list %}
+                    {% if num == current_page %}
+                        <li class="page-item active"><a class="page-link" href="/user/student-list?page={{num}}">{{num}}</a></li>
+                    {% else %}
+                        <li class="page-item "><a class="page-link" href="/user/student-list?page={{num}}">{{num}}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+                <li class="page-item"><a class="page-link" href="/user/student-list?page={{total_pages}}">End</a></li>
+
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+    {% else %}
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <h4>You have no permission to view user list</h4>
+    {% endif %}
+</div>
+
+{% endblock%}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block js %}
+
+{% endblock %}

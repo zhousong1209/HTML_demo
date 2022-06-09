@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+{% block title %}
+Index
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block css %}
+
+{% endblock %}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block content%}
+<div class="container">
+    <h1 class="text-center" style="margin-top:150px;">Welcome to Data Analysis System</h1>
+    <br/>
+    <br/>
+    {% if not current_user_role %}
+        <h4 class="text-center">You have not login, please login</h4>
+    {% else %}
+        <h4 class="text-center">Your role is {{current_user_role}}</h4>
+    {% endif %}
+    <div class="text-center">
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+
+        {% if current_user_role=='admin' %}
+            <button class="btn btn-danger" id="reset-btn">Reset Database</button>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock%}
+
+<!-- -------------------------------------------------------------------- -->
+
+{% block js %}
+<script>
+    var reset_ops = {
+        init: function () {
+            this.eventBind();
+        },
+        eventBind: function () {
+            $("#reset-btn").click(function () {
+                var btn_target = $(this);
+                if (btn_target.hasClass("disabled")) {
+                    alert("processing, please do not click multiple times");
+                    return;
+                }
+
+                btn_target.addClass("disabled");
+                $.ajax({
+                    url: "/course/reset-database",
+                    type: "POST",
+                    data: {
+                        process: "process-start"
+                    },
+                    dataType: 'json',
+                    success: function (res) {
+                        console.log(res)
+                        btn_target.removeClass("disabled");
+
+                        if (res.code == 200) {
+                            alert(res.msg);
+                        } else {
+                            alert(res.msg);
+                        }
+                    }
+                });
+            });
+        }
+    };
+
+    $(document).ready(function () {
+        reset_ops.init();
+
+    });
+</script>
+{% endblock %}
